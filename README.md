@@ -35,13 +35,13 @@
 ----------------
 
 Вот пример простого playbook, который устанавливает Lighthouse на группу хостов:
-
+```yml
 ---
 - name: Install ligthouse and Nginx
   hosts: lighthouse
   roles:
     - lighthouse-role
-
+```
 
 ### Лицензия
 -------
