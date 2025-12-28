@@ -1,0 +1,49 @@
+---
+- name: Install git dependency
+  become: true
+  ansible.builtin.yum:
+    name: git
+    state: present
+
+- name: Install epel-release
+  become: true
+  ansible.builtin.yum:
+    name: epel-release
+    state: present
+
+- name: Install NGINX
+  become: true
+  ansible.builtin.yum:
+    name: nginx
+    state: present
+  notify: Start-nginx
+
+- name: Create nginx main config
+  become: true
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: '0644'
+  notify: Reload-nginx
+
+- name: Copy lighthouse from git
+  become: true
+  ansible.builtin.git:
+    repo: "{{ lighthouse_vcs }}"
+    version: master
+    dest: "{{ lighthouse_location_dir }}"
+
+- name: Create lighthouse nginx config
+  become: true
+  ansible.builtin.template:
+    src: lighthouse.conf.j2
+    dest: /etc/nginx/conf.d/default.conf
+    mode: '0644'
+  notify: Reload-nginx
+
+- name: Ensure nginx is running
+  become: true
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
