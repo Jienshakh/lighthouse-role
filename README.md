@@ -1,38 +1,50 @@
-Role Name
+## Ansible Role: lighthouse-role
 =========
 
-A brief description of the role goes here.
+Роль Ansible для установки и настройки Nginx с Lighthouse (веб-интерфейс для мониторинга ClickHouse).
+Эта роль автоматизирует установку и конфигурацию:
 
-Requirements
+- Nginx - веб-сервер для обслуживания Lighthouse
+- Git - система контроля версий (зависимость для клонирования Lighthouse)
+- Lighthouse - веб-интерфейс для мониторинга и управления ClickHouse от VKCOM
+
+### Требования
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Перед использованием роли убедитесь, что:
 
-Role Variables
+- Ansible >= 2.9
+- Целевые хосты доступны по SSH
+- На хостах есть sudo‑доступ для пользователя Ansible
+
+### Переменные роли
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Все переменные роли находятся в vars/main.yml.
+Ниже приведены основные настраиваемые переменные для Lighthouse:
 
-Dependencies
-------------
+| Переменная                 | По умолчанию                                    | Описание                                                         |
+|----------------------------|-------------------------------------------------|------------------------------------------------------------------|
+| `lighthouse_vcs`           | `"https://github.com/VKCOM/lighthouse.git"`     | URL репозитория Lighthouse, откуда будет клонироваться код       |
+| `lighthouse_location_dir`  | `"/opt/lighthouse/"`                            | Путь на хосте, куда будет размещён Lighthouse                    |
+| `lighthouse_nginx_port`    | `8888`                                          | Порт, на котором nginx будет обслуживать Lighthouse              |
+| `lighthouse_nginx_user`    | `"root"`                                        | Пользователь, от имени которого запускается nginx для Lighthouse |
+|----------------------------|-------------------------------------------------|------------------------------------------------------------------|
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
-Example Playbook
+### Пример использования
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Вот пример простого playbook, который устанавливает Lighthouse на группу хостов:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+---
+- name: Install ligthouse and Nginx
+  hosts: lighthouse
+  roles:
+    - lighthouse-role
 
-License
+
+### Лицензия
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT License
